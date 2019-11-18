@@ -1,19 +1,14 @@
 import _ from 'lodash'
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import Auth from './auth'
 
 export default class LoginRoute extends Route {
   componentWillMount() {
-    if (Auth.isLoggedIn()) {
+    if (window.ReactRouterAuth0Provider.isLoggedIn()) {
       return
     }
 
-    if (_.includes(this.props.location.search, 'signup')) {
-      this.login = Auth.login({ initialScreen: 'signUp' })
-    } else {
-      this.login = Auth.login()
-    }
+    this.login = window.ReactRouterAuth0Provider.login()
   }
 
   componentWillUnmount() {
@@ -22,8 +17,8 @@ export default class LoginRoute extends Route {
   }
 
   render() {
-    if (Auth.isLoggedIn()) {
-      return <Redirect to={{ pathname: '/' }}/>
+    if (window.ReactRouterAuth0Provider.isLoggedIn()) {
+      return <Redirect to={{ pathname: window.ReactRouterAuth0Provider.options.rootRoute }} />
     }
 
     return null

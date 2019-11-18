@@ -1,31 +1,35 @@
 import Auth0 from 'auth0-js'
 import decode from 'jwt-decode'
 import { EventEmitter } from 'events'
-import { config } from '@scribe/common'
-import store from '../modules/store'
-import { clearUserDetails } from '../modules/user/actions'
 
-const NEXT_PATH_KEY = 'next_path'
-const ID_TOKEN_KEY = 'id_token'
-const ACCESS_TOKEN_KEY = 'access_token'
-const PROFILE_KEY = 'profile'
+const AUTH_NEXT_PATH_KEY = 'next_path'
+const AUTH_ID_TOKEN_KEY = 'id_token'
+const AUTH_ACCESS_TOKEN_KEY = 'access_token'
+const AUTH_PROFILE_KEY = 'profile'
 
-const CALLBACK_ROUTE = '/auth0-callback'
-const ROOT_ROUTE = '/'
+export default class Auth {
+  constructor(domain, clientId, opts) {
+    this.options = {
+      audience: '',
+      callbackRoute: '/auth0-callback',
+      rootRoute: '/',
+      loginRoot: '/login',
+      responseType: 'token id_token',
+      scope: 'openid profile email',
 
-const auth0 = new Auth0.WebAuth({
-  domain: config.get('auth0.domain'),
-  clientID: config.get('auth0.app_client_id'),
-  audience: config.get('auth0.audience'),
-  redirectUri: `${window.location.origin}${CALLBACK_ROUTE}`,
-  responseType: 'token id_token',
-  scope: 'openid profile email',
-})
+      ...opts,
+    }
 
-class Auth {
-  constructor(history) {
+    const auth0 = new Auth0.WebAuth({
+      domain: domain,
+      clientID: clientId,
+      audience: this.options.audience,
+      redirectUri: `${window.location.origin}${this.options.callbackRoute}`,
+      responseType: this.options.responseType,
+      scope: this.options.scope,
+    })
+
     this.events = new EventEmitter()
-    this.history = history
     this.lock = auth0
   }
 
@@ -62,34 +66,33 @@ class Auth {
   }
 
   logout() {
-    localStorage.removeItem(ID_TOKEN_KEY)
-    localStorage.removeItem(ACCESS_TOKEN_KEY)
-    localStorage.removeItem(PROFILE_KEY)
-    store.dispatch(clearUserDetails())
+    localStorage.removeItem(AUTH_ID_TOKEN_KEY)
+    localStorage.removeItem(AUTH_ACCESS_TOKEN_KEY)
+    localStorage.removeItem(AUTH_PROFILE_KEY)
   }
 
   getIdToken() {
-    return localStorage.getItem(ID_TOKEN_KEY)
+    return localStorage.getItem(AUTH_ID_TOKEN_KEY)
   }
 
   setIdToken(idToken) {
-    localStorage.setItem(ID_TOKEN_KEY, idToken)
+    localStorage.setItem(AUTH_ID_TOKEN_KEY, idToken)
   }
 
   getAccessToken() {
-    return localStorage.getItem(ACCESS_TOKEN_KEY)
+    return localStorage.getItem(AUTH_ACCESS_TOKEN_KEY)
   }
 
   setAccessToken(accessToken) {
-    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
+    localStorage.setItem(AUTH_ACCESS_TOKEN_KEY, accessToken)
   }
 
   getNextPath() {
-    return localStorage.getItem(NEXT_PATH_KEY) || ROOT_ROUTE
+    return localStorage.getItem(AUTH_NEXT_PATH_KEY) || ROOT_ROUTE
   }
 
   setNextPath(nextPath) {
-    localStorage.setItem(NEXT_PATH_KEY, nextPath)
+    localStorage.setItem(AUTH_NEXT_PATH_KEY, nextPath)
   }
 
   isLoggedIn() {
@@ -115,12 +118,10 @@ class Auth {
   }
 
   setProfile(profile) {
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile))
+    localStorage.setItem(AUTH_PROFILE_KEY, JSON.stringify(profile))
   }
 
   getProfile() {
-    return JSON.parse(localStorage.getItem(PROFILE_KEY))
+    return JSON.parse(localStorage.getItem(AUTH_PROFILE_KEY))
   }
 }
-
-export default new Auth()

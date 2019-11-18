@@ -1,13 +1,12 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import Auth from './auth'
 
 class AuthCallbackRoute extends Route {
   componentWillMount() {
     this.setState({ called: false })
 
-    Auth.computeAuthed()
+    window.ReactRouterAuth0Provider.computeAuthed()
       .then(async () => {
         let context = {}
         let authProfile = {}
@@ -22,13 +21,13 @@ class AuthCallbackRoute extends Route {
         // }
 
         try {
-          authProfile = Auth.getProfile()
+          authProfile = window.ReactRouterAuth0Provider.getProfile()
         } catch (profileError) {
           logger.error('Callback Route: Could not get user profile info', profileError)
           return
         }
 
-        Auth.setProfile(Object.assign({}, authProfile, { userId: context.userId }))
+        window.ReactRouterAuth0Provider.setProfile(Object.assign({}, authProfile, { userId: context.userId }))
       })
   }
 
@@ -36,9 +35,9 @@ class AuthCallbackRoute extends Route {
     if (this.state.called && this.props.userId) {
       return (
         <Redirect to={{
-          pathname: Auth.getNextPath(),
+          pathname: window.ReactRouterAuth0Provider.getNextPath(),
           state: { from: this.props.location },
-        }}/>
+        }} />
       )
     }
 
@@ -47,7 +46,7 @@ class AuthCallbackRoute extends Route {
       return (
         <Redirect to={{
           pathname: '/',
-        }}/>
+        }} />
       )
     }
 
@@ -56,7 +55,7 @@ class AuthCallbackRoute extends Route {
       return (
         <Redirect to={{
           pathname: `/request-access/${this.state.userNotOnWhitelist}`,
-        }}/>
+        }} />
       )
     }
 
@@ -68,5 +67,5 @@ export default connect(
   state => ({
     userId: state.user.get('userId'),
   }),
-  ({ }),
+  ({}),
 )(AuthCallbackRoute)
