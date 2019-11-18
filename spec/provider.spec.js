@@ -2,31 +2,17 @@ import React from 'react'
 import { mount, shallow } from 'enzyme'
 
 import AuthProvider from '../src/provider'
+import Auth from '../src/auth'
+jest.mock('../src/auth')
+
+beforeEach(() => {
+  Auth.mockClear()
+})
 
 describe('Auth0 Provider', () => {
-  let auth0MockFn
-  let auth0MockResult
-
   beforeEach(() => {
-    auth0MockResult = {
-      computeAuthed: jest.fn(),
-      login: jest.fn(),
-      logout: jest.fn(),
-      isLoggedIn: jest.fn(),
-      getTokenExpirationDate: jest.fn(),
-      isTokenExpired: jest.fn(),
-      getIdToken: jest.fn(),
-      setIdToken: jest.fn(),
-      getAccessToken: jest.fn(),
-      setAccessToken: jest.fn(),
-      getNextPath: jest.fn(),
-      setNextPath: jest.fn(),
-      getProfile: jest.fn(),
-      setProfile: jest.fn(),
-    }
-
-    auth0MockFn = jest.fn().mockReturnValue(auth0MockResult)
-    window.ReactRouterAuth0Provider = auth0MockFn
+    window.ReactRouterAuth0Provider = null
+    Auth.mockClear()
   })
 
   it('requires domain prop', () => {
@@ -96,7 +82,7 @@ describe('Auth0 Provider', () => {
       </AuthProvider>
     )
 
-    expect(auth0MockFn).toHaveBeenCalledWith('any_domain', 'any_clientId', {})
+    expect(Auth).toHaveBeenCalledWith('any_domain', 'any_clientId', {})
   })
 
   it('initializes Auth0 with domain, clientId and props as options', () => {
@@ -106,6 +92,6 @@ describe('Auth0 Provider', () => {
       </AuthProvider>
     )
 
-    expect(auth0MockFn).toHaveBeenCalledWith('any_domain', 'any_clientId', { scope: 'email profile openid' })
+    expect(Auth).toHaveBeenCalledWith('any_domain', 'any_clientId', { scope: 'email profile openid' })
   })
 })
