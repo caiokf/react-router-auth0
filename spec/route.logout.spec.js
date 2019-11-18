@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 
 import LogoutRoute from '../src/route.logout'
 
-describe('Login Route', () => {
+describe('Logout Route', () => {
   let auth0MockResult
 
   beforeEach(() => {
