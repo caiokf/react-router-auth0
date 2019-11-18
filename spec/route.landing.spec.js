@@ -19,9 +19,11 @@ describe('Landing Route', () => {
     auth0MockResult.isLoggedIn = jest.fn().mockReturnValue(true)
 
     const wrapper = shallow(<LandingRoute path="http://landing-page.com" loggedInPath="/dashboard" />)
+    const redirect = wrapper.find(Redirect)
 
     expect(window.ReactRouterAuth0Provider.isLoggedIn).toHaveBeenCalled()
-    expect(wrapper.find(Redirect)).toHaveLength(1)
+    expect(redirect).toHaveLength(1)
+    expect(redirect.prop('to').pathname).toEqual('/dashboard')
   })
 
   it('should redirect to the configured path when user is not logged in', () => {

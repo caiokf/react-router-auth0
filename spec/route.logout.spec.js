@@ -24,7 +24,10 @@ describe('Logout Route', () => {
   it('redirects when rendered', () => {
     window.ReactRouterAuth0Provider.isLoggedIn = () => true
 
-    const wrapper = shallow(<LogoutRoute />)
-    expect(wrapper.find(Redirect)).toHaveLength(1)
+    const wrapper = shallow(<LogoutRoute redirect='/logged-out' />)
+    const redirect = wrapper.find(Redirect)
+
+    expect(redirect).toHaveLength(1)
+    expect(redirect.prop('to').pathname).toEqual('/logged-out')
   })
 })

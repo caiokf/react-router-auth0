@@ -11,7 +11,7 @@ describe('Login Route', () => {
     auth0MockResult = {
       login: jest.fn(),
       isLoggedIn: jest.fn(),
-      options: { rootRoute: '/' },
+      options: { rootRoute: '/redirect-here-when-logged-in' },
     }
 
     window.ReactRouterAuth0Provider = auth0MockResult
@@ -28,7 +28,10 @@ describe('Login Route', () => {
     window.ReactRouterAuth0Provider.isLoggedIn = () => true
 
     const wrapper = shallow(<LoginRoute />)
-    expect(wrapper.find(Redirect)).toHaveLength(1)
+    const redirect = wrapper.find(Redirect)
+
+    expect(redirect).toHaveLength(1)
+    expect(redirect.prop('to').pathname).toEqual(auth0MockResult.options.rootRoute)
   })
 
   it('should call auth0 login lock screen when user is not logged in', () => {
