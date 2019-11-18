@@ -1,8 +1,24 @@
 {
   "name": "react-routing-auth0",
-  "version": "1.0.1",
+  "description": "Library to get started quickly with Auth0 using React and React-Router.",
+  "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "author": "Caio Kinzel Filho",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caiokf/react-router-auth0.git"
+  },
+  "keywords": [
+    "react",
+    "react-router",
+    "auth",
+    "components",
+    "auth0"
+  ],
+  "bugs": {
+    "url": "https://github.com/caiokf/react-router-auth0/issues"
+  },
   "scripts": {
     "build": "npx babel src --out-dir dist",
     "prepublish": "yarn build && np --no-cleanup --yolo --no-publish",
