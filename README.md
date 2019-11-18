@@ -1,4 +1,4 @@
-# react-router-auth0
+# react-routing-auth0
 
 Library to get started quickly with Auth0 using React and React-Router.
 
@@ -10,10 +10,10 @@ Library to get started quickly with Auth0 using React and React-Router.
 
 ## Installation
 
-Install `father` via yarn or npm.
+Install `react-routing-auth0` via yarn or npm.
 
 ```bash
-$ yarn add react-router-auth0
+$ yarn add react-routing-auth0
 ```
 
 ## Usage
