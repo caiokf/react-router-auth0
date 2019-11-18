@@ -10,6 +10,9 @@ describe('Logout Route', () => {
   beforeEach(() => {
     auth0MockResult = {
       logout: jest.fn(),
+      options: {
+        rootRoute: '/',
+      },
     }
 
     window.ReactRouterAuth0Provider = auth0MockResult
@@ -29,5 +32,15 @@ describe('Logout Route', () => {
 
     expect(redirect).toHaveLength(1)
     expect(redirect.prop('to').pathname).toEqual('/logged-out')
+  })
+
+  it('redirects to root route when redirect prop not present', () => {
+    window.ReactRouterAuth0Provider.options.rootRoute = '/default'
+
+    const wrapper = shallow(<LogoutRoute />)
+    const redirect = wrapper.find(Redirect)
+
+    expect(redirect).toHaveLength(1)
+    expect(redirect.prop('to').pathname).toEqual('/default')
   })
 })
