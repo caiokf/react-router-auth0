@@ -2,7 +2,7 @@
   "name": "react-routing-auth0",
   "description": "Library to get started quickly with Auth0 using React and React-Router.",
   "version": "1.0.4",
-  "main": "index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "author": "Caio Kinzel Filho",
   "repository": {
