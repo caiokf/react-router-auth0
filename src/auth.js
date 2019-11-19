@@ -88,7 +88,7 @@ export default class Auth {
   }
 
   getNextPath() {
-    return localStorage.getItem(AUTH_NEXT_PATH_KEY) || ROOT_ROUTE
+    return localStorage.getItem(AUTH_NEXT_PATH_KEY) || this.options.rootRoute
   }
 
   setNextPath(nextPath) {
