@@ -10,7 +10,7 @@ export default class LandingRoute extends Route {
       }} />
     }
 
-    window.location.replace(this.props.path)
+    window.location.replace(this.props.landingUrl)
     return null
   }
 }

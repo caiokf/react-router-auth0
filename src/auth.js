@@ -35,7 +35,7 @@ export default class Auth {
 
   computeAuthed() {
     return new Promise((resolve, reject) => {
-      auth0.parseHash({}, (err, authResult) => {
+      this.lock.parseHash({}, (err, authResult) => {
         if (err) {
           return reject(err)
         }
@@ -43,7 +43,7 @@ export default class Auth {
         this.setIdToken(authResult.idToken)
         this.setAccessToken(authResult.accessToken)
 
-        return auth0.client.userInfo(authResult.accessToken, (error, profile) => {
+        return this.lock.client.userInfo(authResult.accessToken, (error, profile) => {
           if (error) {
             this.setProfile({ error })
             return reject(error)
