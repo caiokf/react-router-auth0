@@ -1,38 +1,33 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
 
-class AuthCallbackRoute extends Route {
+export default class AuthCallbackRoute extends Route {
   componentWillMount() {
-    this.setState({ called: false })
+    this.setState({ called: false, authProfile: null })
 
     window.ReactRouterAuth0Provider.computeAuthed()
-      .then(async () => {
-        let context = {}
+      .then(() => {
         let authProfile = {}
 
         this.setState({ called: true })
 
-        // try {
-        //   context = await this.props.getUserSession()
-        // } catch (sessionError) {
-        //   logger.error('Callback Route: Could not get user session', sessionError)
-        //   return
-        // }
-
         try {
           authProfile = window.ReactRouterAuth0Provider.getProfile()
         } catch (profileError) {
-          logger.error('Callback Route: Could not get user profile info', profileError)
+          console.log('Auth Callback Route: Could not get user profile info', profileError)
           return
         }
 
-        window.ReactRouterAuth0Provider.setProfile(Object.assign({}, authProfile, { userId: context.userId }))
+        window.ReactRouterAuth0Provider.setProfile(Object.assign({}, authProfile))
+        this.setState({ authProfile })
+      })
+      .catch((err) => {
+        console.log('Auth Callback Route: Could not compute user authentication', err)
       })
   }
 
   render() {
-    if (this.state.called && this.props.userId) {
+    if (this.state.called && this.state.authProfile) {
       return (
         <Redirect to={{
           pathname: window.ReactRouterAuth0Provider.getNextPath(),
@@ -41,31 +36,7 @@ class AuthCallbackRoute extends Route {
       )
     }
 
-    // Redirect new user that has refused access Auth0
-    if (this.state.userRefusedAccess) {
-      return (
-        <Redirect to={{
-          pathname: '/',
-        }} />
-      )
-    }
-
-    // Redirect user that is not on whitelist
-    if (this.state.userNotOnWhitelist) {
-      return (
-        <Redirect to={{
-          pathname: `/request-access/${this.state.userNotOnWhitelist}`,
-        }} />
-      )
-    }
-
     // could return loading here
     return null
   }
 }
-export default connect(
-  state => ({
-    userId: state.user.get('userId'),
-  }),
-  ({}),
-)(AuthCallbackRoute)

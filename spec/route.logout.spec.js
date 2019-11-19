@@ -18,14 +18,14 @@ describe('Logout Route', () => {
     window.ReactRouterAuth0Provider = auth0MockResult
   })
 
-  it('shoul call logout when rendered', () => {
+  it('should call logout when rendered', () => {
     shallow(<LogoutRoute />)
 
     expect(auth0MockResult.logout).toHaveBeenCalled()
   })
 
   it('redirects when rendered', () => {
-    window.ReactRouterAuth0Provider.isLoggedIn = () => true
+    window.ReactRouterAuth0Provider.isLoggedIn = jest.fn().mockReturnValue(true)
 
     const wrapper = shallow(<LogoutRoute redirect='/logged-out' />)
     const redirect = wrapper.find(Redirect)
